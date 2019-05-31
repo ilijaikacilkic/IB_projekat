@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class FileUploadController {
 
-	private static String UPLOAD_FOLDER = "C:\\Users\\Dragan\\Desktop\\images_folder\\";
+	private static String UPLOAD_FOLDER = "C:\\Users\\Dragan\\Desktop\\images_upload\\";
 
 	@RequestMapping("/upload")
 	public ModelAndView showUpload() {
