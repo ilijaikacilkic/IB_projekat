@@ -9,8 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -31,26 +30,22 @@ import org.w3c.dom.Element;
 
 public class ImageZIP {
 
-	public static void main(String[] args) {	
-		
-		
+	public static void main(String[] args) {
 		List<String> images = new ArrayList<>();
 		
-		
 		System.out.println("user:");
-		Scanner userInputName = new Scanner(System.in);
+		Scanner userNameInput = new Scanner(System.in);
 		
-		String userName = userInputName.nextLine();
+		String userName = userNameInput.nextLine();
 		
 		
-		System.out.println("Copy and paste the path to your file: ");
-		Scanner filePathInput = new Scanner(System.in);		
+		System.out.println("Copy and paste the image location path: ");
+		Scanner filePathInput = new Scanner(System.in);
+		
 		String filePath = filePathInput.nextLine();
-		userInputName.close();
+		userNameInput.close();
 		filePathInput.close();
 		File chosenFile = new File(filePath);
-		
-		
 		
 		String[] extension = new String[] {
 				"gif","png","bmp","jpg","jpeg"
@@ -60,8 +55,8 @@ public class ImageZIP {
 			
 			@Override
 			public boolean accept(File dir, String name) {
-				for(final String type : extension ) {
-					if(name.endsWith("."+type)) {
+				for(final String zeljko : extension ) {
+					if(name.endsWith("."+zeljko)) {
 						return true;
 					}
 				}
@@ -76,30 +71,30 @@ public class ImageZIP {
 				Document doc = db.newDocument();
 				
 				
-				Element image = doc.createElement("img");
-				image.appendChild(doc.createTextNode(userName));
-				doc.appendChild(image);
+				Element el = doc.createElement("img");
+				el.appendChild(doc.createTextNode(userName));
+				doc.appendChild(el);
 				for(final File f : chosenFile.listFiles(fnf)) {
-					BufferedImage  buffimg = null;
+					BufferedImage  bi = null;
 					try {
 						images.add(f.getAbsolutePath());
-						buffimg = ImageIO.read(f);
+						bi = ImageIO.read(f);
 						
-						Element img1 = doc.createElement("image");
-						Attr name = doc.createAttribute("img name");
+						Element el1 = doc.createElement("Image");
+						Attr name = doc.createAttribute("Name");
 						name.setValue(String.valueOf(f.getName()));
-						img1.setAttributeNode(name);
-						Attr width = doc.createAttribute("img width");
-						width.setValue(String.valueOf(buffimg.getWidth()));
-						img1.setAttributeNode(width);
-						Attr height = doc.createAttribute(" img height ");
-						height.setValue(String.valueOf(buffimg.getHeight()));
-						img1.setAttributeNode(height);
+						el1.setAttributeNode(name);
+						Attr width = doc.createAttribute("Width");
+						width.setValue(String.valueOf(bi.getWidth()));
+						el1.setAttributeNode(width);
+						Attr height = doc.createAttribute("Height");
+						height.setValue(String.valueOf(bi.getHeight()));
+						el1.setAttributeNode(height);
 						Attr hashCode = doc.createAttribute("HashCode");
-						hashCode.setValue(String.valueOf(buffimg.hashCode()));
-						img1.setAttributeNode(hashCode);
+						hashCode.setValue(String.valueOf(bi.hashCode()));
+						el1.setAttributeNode(hashCode);
 						
-						image.appendChild(img1);
+						el.appendChild(el1);
 						
 						
 					}catch (Exception e) {
@@ -109,8 +104,8 @@ public class ImageZIP {
 						
 				TransformerFactory tff = TransformerFactory.newInstance();
 				Transformer t = tff.newTransformer();
-				DOMSource domS = new DOMSource(image);
-				File newFile = new File("C:\\Users\\Dragan\\Desktop\\images_folder\\xml.xml");
+				DOMSource domS = new DOMSource(el);
+				File newFile = new File("C:\\Users\\Dragan\\Desktop\\images\\xml.xml");
 				StreamResult sr = new StreamResult(newFile);
 				
 				t.transform(domS, sr);
@@ -125,30 +120,29 @@ public class ImageZIP {
 		}			
 	}
 	
-	/* Zipuje sliku i xml fajl */
-	
     public static void zip(List<String> images){
         
-        FileOutputStream fileOutStream = null;
-        ZipOutputStream zipOutStream = null;
-        FileInputStream fileInputStream = null;
+        FileOutputStream fos = null;
+        ZipOutputStream zipOut = null;
+        FileInputStream fis = null;
         try {
-        	fileOutStream = new FileOutputStream("C:\\Users\\Dragan\\Desktop\\images_foler\\zip.zip");
-        	zipOutStream = new ZipOutputStream(new BufferedOutputStream(fileOutStream));
+            fos = new FileOutputStream("C:\\Users\\Dragan\\Desktop\\images\\zip.zip");
+            zipOut = new ZipOutputStream(new BufferedOutputStream(fos));
             for(String filePath : images){
                 File input = new File(filePath);
-                fileInputStream = new FileInputStream(input);
+                fis = new FileInputStream(input);
                 ZipEntry ze = new ZipEntry(input.getName());
-                zipOutStream.putNextEntry(ze);
+
+                zipOut.putNextEntry(ze);
                 byte[] tmp = new byte[4*1024];
                 int size = 0;
-                while((size = fileInputStream.read(tmp)) != -1){
-                	zipOutStream.write(tmp, 0, size);
+                while((size = fis.read(tmp)) != -1){
+                    zipOut.write(tmp, 0, size);
                 }
-                zipOutStream.flush();
-                fileInputStream.close();
+                zipOut.flush();
+                fis.close();
             }
-            zipOutStream.close();
+            zipOut.close();
             System.out.println("Done... Zipped the files...");
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
@@ -158,7 +152,7 @@ public class ImageZIP {
             e.printStackTrace();
         } finally{
             try{
-                if(fileOutStream != null) fileOutStream.close();
+                if(fos != null) fos.close();
             } catch(Exception ex){
                  
             }
