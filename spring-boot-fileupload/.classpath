@@ -54,5 +54,42 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/ib_projekat/Bezbednost/lib/xmlsec-1.5.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dragan/.m2/repository/org/bouncycastle/bcprov-jdk15on/1.59/bcprov-jdk15on-1.59.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.bouncycastle"/>
+			<attribute name="maven.artifactId" value="bcprov-jdk15on"/>
+			<attribute name="maven.version" value="1.59"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dragan/.m2/repository/org/hibernate/javax/persistence/hibernate-jpa-2.1-api/1.0.0.Final/hibernate-jpa-2.1-api-1.0.0.Final.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.hibernate.javax.persistence"/>
+			<attribute name="maven.artifactId" value="hibernate-jpa-2.1-api"/>
+			<attribute name="maven.version" value="1.0.0.Final"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dragan/.m2/repository/org/springframework/security/spring-security-core/4.2.3.RELEASE/spring-security-core-4.2.3.RELEASE.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.springframework.security"/>
+			<attribute name="maven.artifactId" value="spring-security-core"/>
+			<attribute name="maven.version" value="4.2.3.RELEASE"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dragan/.m2/repository/joda-time/joda-time/2.9.9/joda-time-2.9.9.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="joda-time"/>
+			<attribute name="maven.artifactId" value="joda-time"/>
+			<attribute name="maven.version" value="2.9.9"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
