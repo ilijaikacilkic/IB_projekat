@@ -1,0 +1,16 @@
+<h1>Welcome page</a></h1>
+<div ng-show="authenticated">
+	<p>Welcome <b>{{user.firstName}} {{user.lastName}}</b></p>
+	<p>Your authority(s)
+		<code ng-repeat="authority in user.authorities">{{authority.authority | limitTo:999:5}}</code>
+	</p>
+</div>
+<div  ng-show="!authenticated">	
+</div>
+<div class="alert {{responseBoxClass}}" ng-show="serverResponse">
+    <b>Server Response:</b>
+    <pre>Path: /{{serverResponse.config.url}}</pre>
+    <pre>Method: {{serverResponse.config.method}}</pre>
+    <pre>Status: {{serverResponse.status}}</pre>
+    <pre>Data: {{serverResponse.data}}</pre>
+</div>

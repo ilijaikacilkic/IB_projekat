@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><storage><username>John Smith</username><images><image><name>cat1.jpg</name><width>494</width><height>500</height><hash>0550d4f24106e2825812b3d196f39c22</hash></image><image><name>cat2.jpg</name><width>600</width><height>600</height><hash>b91a81a8539362f8155c6c664a31926b</hash></image><image><name>cat3.jpg</name><width>700</width><height>700</height><hash>b54d16370018cd3725a3161fcc664c1e</hash></image></images><date>2019/05/27 20:24:00</date><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:SignedInfo>
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference URI="">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+<ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>pFnpHhq2+nqM3eBzhJzbQoltHi4=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue>
+IUWEgwYLXiW06wPvqNolXNyVUBYpfOfhPOH3PekIi8NXlgvs3GPJwM6GDg5S3k9UvvKaYpnnMJLt&#13;
+PAvx3HVYqP5mHfbZLTFZkFKt2EQHfZsDtGpMGaxjlevNqXN+jfvbmt7RcbfgmNVmLNxbZ5H1jXs7&#13;
+CGNrY2Gml51Z5Mb0H/RPxklLIvV9IC5SgCLfFO0SNTt1xPKtGeWqoxty99h27g02thuysOOF7QJw&#13;
+mfBcbDtOeEeMSMyn2L5rYIyzrtUoKUUvERu0PIzBfo8KmsxDeSJz9jfdmKs/gAjPPuCHLzvyZ1px&#13;
+5X7cK6j2OXN/r8nfal3Dovx5BR1zG0HgwooHXQ==
+</ds:SignatureValue>
+<ds:KeyInfo>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>wvUhQUr8wADpZP0UqQN2gTMIJv6sTOkAGVYWUHg8tnf8Ywt9wLkNMCkR9sSoANCq15M/SzR80SuV&#13;
+MS4XDRgcqoRblvLPXzxjyfsLD7ci+Z8t3/Rg4JqIE80bY2Zm8w8I5Pf5G+LfGxUK4+S7iW9VzySB&#13;
+tOT15lGcfNJZYya/jOoHUME+AHrpxYeB2/Xl9mwW7keeAaJm08QgQ9Nh/lN2Rh9voV3+vzEk1wn7&#13;
+VLYqbemFNqkKg+mhaxujouw3wMkiMcvfKSgPrNPjU0McFmqzoMtz9QL31dAPIDeCzEI+1SoITwDl&#13;
+OwVA/IKa6cKZAWsiTHUEHVBMROyrSc6BTtWLIQ==</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+<ds:X509Data>
+<ds:X509Certificate>
+MIIDbjCCAlagAwIBAgIEWteVQjANBgkqhkiG9w0BAQsFADB5MRUwEwYJKoZIhvcNAQkBFgZzcHJp&#13;
+bmcxCzAJBgNVBAYTAlJTMQ8wDQYDVQQIDAZzcHJpbmcxDzANBgNVBAcMBnNwcmluZzEPMA0GA1UE&#13;
+CgwGc3ByaW5nMQ8wDQYDVQQLDAZzcHJpbmcxDzANBgNVBAMMBnNwcmluZzAeFw0xODA0MTgxODU4&#13;
+NDdaFw0xOTA0MTgxODU4NDdaMHkxFTATBgkqhkiG9w0BCQEWBnNwcmluZzELMAkGA1UEBhMCUlMx&#13;
+DzANBgNVBAgMBnNwcmluZzEPMA0GA1UEBwwGc3ByaW5nMQ8wDQYDVQQKDAZzcHJpbmcxDzANBgNV&#13;
+BAsMBnNwcmluZzEPMA0GA1UEAwwGc3ByaW5nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC&#13;
+AQEAwvUhQUr8wADpZP0UqQN2gTMIJv6sTOkAGVYWUHg8tnf8Ywt9wLkNMCkR9sSoANCq15M/SzR8&#13;
+0SuVMS4XDRgcqoRblvLPXzxjyfsLD7ci+Z8t3/Rg4JqIE80bY2Zm8w8I5Pf5G+LfGxUK4+S7iW9V&#13;
+zySBtOT15lGcfNJZYya/jOoHUME+AHrpxYeB2/Xl9mwW7keeAaJm08QgQ9Nh/lN2Rh9voV3+vzEk&#13;
+1wn7VLYqbemFNqkKg+mhaxujouw3wMkiMcvfKSgPrNPjU0McFmqzoMtz9QL31dAPIDeCzEI+1SoI&#13;
+TwDlOwVA/IKa6cKZAWsiTHUEHVBMROyrSc6BTtWLIQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBs&#13;
+BePykYFsJVv8wZCKTJ1cwo1sQCg0B2oWh17FDTaKS4CBTpOQz2H2A1vmJ2JQbIoFviFmHHaJOOC8&#13;
+3CNsPtCEPn2yLzSuxFMYn7zX4ratTsdwL5jGxq3HPbWviGVuhflMZ3nt8fx5FBGyp1fJBxWuG4yH&#13;
+k/h16gu1kMeeFlI1DM/jQ9S88VH65552GAgtaL4eBrFzdXvYKWiJbLyukRAXoAnRByPbAWfpAgkH&#13;
+h2aDgf7lL5cYOriwzVp059g6hKUMWgJDhtLVrPEgCIjeDuyJF5YZdb1lQ31ADGRiS3y/HIBjz1In&#13;
+0Zebfl1lfHP2sJ7thNeqXdSb9+hbI5Dtm8cu
+</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+</ds:Signature></storage>
