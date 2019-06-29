@@ -11,26 +11,24 @@ import ib.project.model.User;
 import ib.project.repository.UserRepository;
 import ib.project.service.UserService;
 
-
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 	@Autowired
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    @Override
-    public User findByUsername( String username ) throws UsernameNotFoundException {
-        User u = userRepository.findByUsername( username );
-        return u;
-    }
+	@Override
+	public User findByUsername(String username) throws UsernameNotFoundException {
+		User u = userRepository.findByUsername(username);
+		return u;
+	}
 
-    public User findById( Long id ) throws AccessDeniedException {
-        User u = userRepository.findOne( id );
-        return u;
-    }
+	public User findById(Long id) throws AccessDeniedException {
+		User u = userRepository.findOne(id);
+		return u;
+	}
 
-    public List<User> findAll() throws AccessDeniedException {
-        List<User> result = userRepository.findAll();
-        return result;
-    }
+	public List<User> findAll() throws AccessDeniedException {
+		List<User> result = userRepository.findAll();
+		return result;
+	}
 }
-

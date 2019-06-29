@@ -1,5 +1,7 @@
 package ib.project.service.impl;
 
+import java.text.ParseException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,67 +15,73 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import ib.project.model.Authority;
 import ib.project.model.User;
 import ib.project.repository.UserRepository;
+import ib.project.service.KeyStoreService;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService{
+public class CustomUserDetailsService implements UserDetailsService {
 	protected final Log LOGGER = LogFactory.getLog(getClass());
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-    
-    //FUnkcija koja na osnovu username-a iz baze vraca objekat User-a
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
-        } else {
-            return user;
-        }
-    }
+	@Autowired
+	private KeyStoreService keyStoreService;
 
-    //Funkcija pomocu koje korisnik menja svoju lozinku
-    public void changePassword(String oldPassword, String newPassword) {
+	// FUnkcija koja na osnovu username-a iz baze vraca objekat User-a
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepository.findByUsername(username);
+		if (user == null) {
+			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+		} else {
+			return user;
+		}
+	}
 
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        String username = currentUser.getName();
+	// Funkcija pomocu koje korisnik menja svoju lozinku
+	public void changePassword(String oldPassword, String newPassword) {
 
-        if (authenticationManager != null) {
-            LOGGER.debug("Re-authenticating user '"+ username + "' for password change request.");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
-        } else {
-            LOGGER.debug("No authentication manager set. can't change Password!");
+		if (authenticationManager != null) {
+			LOGGER.debug("Re-authenticating user '" + username + "' for password change request.");
 
-            return;
-        }
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
+		} else {
+			LOGGER.debug("No authentication manager set. can't change Password!");
 
-        LOGGER.debug("Changing password for user '"+ username + "'");
+			return;
+		}
 
-        User user = (User) loadUserByUsername(username);
+		LOGGER.debug("Changing password for user '" + username + "'");
 
-        //pre nego sto u bazu upisemo novu lozinku, potrebno ju je hesirati
-        //ne zelimo da u bazi cuvamo lozinke u plain text formatu
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+		User user = (User) loadUserByUsername(username);
 
-    }
-    
-    public void registerNewUser(String username, String password) {
-    	User user = new User();
-    	user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-    	user.setEnabled(true);
-    	userRepository.save(user);
-    }
+		// pre nego sto u bazu upisemo novu lozinku, potrebno ju je hesirati
+		// ne zelimo da u bazi cuvamo lozinke u plain text formatu
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(user);
+
+	}
+
+	public void registerNewUser(String username, String password) throws ParseException {
+		User user = new User();
+		user.setUsername(username);
+		user.setPassword(passwordEncoder.encode(password));
+		user.setEnabled(true);
+
+		String location = keyStoreService.generateKeyStoreFile(username);
+		user.setCertificate(location);
+
+		userRepository.save(user);
+	}
 }

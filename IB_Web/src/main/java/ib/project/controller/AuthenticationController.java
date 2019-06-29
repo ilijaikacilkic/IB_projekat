@@ -2,6 +2,7 @@ package ib.project.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,101 +31,89 @@ import ib.project.security.TokenHelper;
 import ib.project.security.auth.JwtAuthenticationRequest;
 import ib.project.service.impl.CustomUserDetailsService;
 
-
 @RestController
-@RequestMapping( value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE )
+@RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 	@Autowired
-    TokenHelper tokenHelper;
+	TokenHelper tokenHelper;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
-    
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    
-    @Autowired
-    private DeviceProvider deviceProvider;
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 
-    //Ukoliko je aplikacija podignuta lokalno => localhost:8080/api/login
-    //Metodi se prosledjuje objekat u kom se nalazi username i password korisnika
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(
-            @RequestBody JwtAuthenticationRequest authenticationRequest,
-            HttpServletResponse response,
-            Device device
-    ) throws AuthenticationException, IOException {
-    	
-        // Izvrsavanje security dela
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getUsername(),
-                        authenticationRequest.getPassword()
-                )
-        );
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-        // Ubaci username + password u kontext
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+	@Autowired
+	private DeviceProvider deviceProvider;
 
-        // Kreiraj token
-        User user = (User)authentication.getPrincipal();
-        String jws = tokenHelper.generateToken( user.getUsername(), device);
-        int expiresIn = tokenHelper.getExpiredIn(device);
-        
-        // Vrati token kao odgovor na uspesno autentifikaciju
-        return ResponseEntity.ok(new UserTokenState(jws, expiresIn));
-    }
+	// Ukoliko je aplikacija podignuta lokalno => localhost:8080/api/login
+	// Metodi se prosledjuje objekat u kom se nalazi username i password korisnika
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
+			HttpServletResponse response, Device device) throws AuthenticationException, IOException {
 
-    @RequestMapping(value = "/refresh", method = RequestMethod.POST)
-    public ResponseEntity<?> refreshAuthenticationToken(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Principal principal
-            ) {
+		// Izvrsavanje security dela
+		final Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+						authenticationRequest.getPassword()));
 
-        String authToken = tokenHelper.getToken( request );
+		// Ubaci username + password u kontext
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Device device = deviceProvider.getCurrentDevice(request);
+		// Kreiraj token
+		User user = (User) authentication.getPrincipal();
+		String jws = tokenHelper.generateToken(user.getUsername(), device);
+		int expiresIn = tokenHelper.getExpiredIn(device);
 
-        if (authToken != null && principal != null) {
+		// Vrati token kao odgovor na uspesno autentifikaciju
+		return ResponseEntity.ok(new UserTokenState(jws, expiresIn));
+	}
 
-            // TODO check user password last update
-            String refreshedToken = tokenHelper.refreshToken(authToken, device);
-            int expiresIn = tokenHelper.getExpiredIn(device);
+	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
+	public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request, HttpServletResponse response,
+			Principal principal) {
 
-            return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
-        } else {
-            UserTokenState userTokenState = new UserTokenState();
-            return ResponseEntity.accepted().body(userTokenState);
-        }
-    }
+		String authToken = tokenHelper.getToken(request);
 
-    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
-        userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
-        Map<String, String> result = new HashMap<>();
-        result.put( "result", "success" );
-        return ResponseEntity.accepted().body(result);
-    }
+		Device device = deviceProvider.getCurrentDevice(request);
 
-    static class PasswordChanger {
-        public String oldPassword;
-        public String newPassword;
-    }
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(
-    		 @RequestBody JwtAuthenticationRequest authenticationRequest,
-             HttpServletResponse response
-    ) throws AuthenticationException, IOException {
-    	
-    	String username = authenticationRequest.getUsername();
-    	String password = authenticationRequest.getPassword();
-    	
-    	userDetailsService.registerNewUser(username, password);
-    	
-    	return ResponseEntity.ok().build();
-    }
-    
+		if (authToken != null && principal != null) {
+
+			// TODO check user password last update
+			String refreshedToken = tokenHelper.refreshToken(authToken, device);
+			int expiresIn = tokenHelper.getExpiredIn(device);
+
+			return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
+		} else {
+			UserTokenState userTokenState = new UserTokenState();
+			return ResponseEntity.accepted().body(userTokenState);
+		}
+	}
+
+	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
+		userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
+		Map<String, String> result = new HashMap<>();
+		result.put("result", "success");
+		return ResponseEntity.accepted().body(result);
+	}
+
+	static class PasswordChanger {
+		public String oldPassword;
+		public String newPassword;
+	}
+
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
+			HttpServletResponse response) throws AuthenticationException, IOException, ParseException {
+
+		String username = authenticationRequest.getUsername();
+		String password = authenticationRequest.getPassword();
+
+		userDetailsService.registerNewUser(username, password);
+
+		return ResponseEntity.ok().build();
+	}
+
 }
-
