@@ -1,9 +1,23 @@
-<h1>Welcome page</a></h1>
 <div ng-show="authenticated">
-	<p>Welcome <b>{{user.firstName}} {{user.lastName}}</b></p>
+	<p>USER CONTROL<b>{{user.firstName}} {{user.lastName}}</b></p>
 	<p>Your authority(s)
 		<code ng-repeat="authority in user.authorities">{{authority.authority | limitTo:999:5}}</code>
 	</p>
+	
+	<div ng-show="hasRole(user.authorities, 'ROLE_ADMIN')">
+		<p>Inactive users</p>
+		<table class="table" border="1">
+			<tr>
+				<th>Users</th>
+				<th>Activate</th>
+			</tr>
+			<tr id="tr_{{inactiveUser.username}}" ng-repeat="inactiveUser in inactiveUsers">
+				<td>{{inactiveUser.username}}</td>
+				<td><a href="" ng-click="activateUser(inactiveUser.username)">Activate</a></td>
+			</tr>
+		</table>
+	</div>
+	
 </div>
 <div  ng-show="!authenticated">	
 </div>

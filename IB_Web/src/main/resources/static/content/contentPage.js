@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('myApp.dashboard', ['ngRoute'])
+angular.module('myApp.contentPage', ['ngRoute'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {
-    templateUrl: 'dashboard/dashboard.html',
-    controller: DashboardCtrl,
-		resolve: DashboardCtrl.resolve
+    templateUrl: 'content/contentPage.html',
+    controller: ContentPageCtrl,
+		resolve: ContentPageCtrl.resolve
   });
 }]);
 
-function DashboardCtrl($scope, $rootScope, $http, isAuthenticated, authService) {
+function ContentPageCtrl($scope, $rootScope, $http, isAuthenticated, authService) {
 	$rootScope.authenticated = isAuthenticated;
 
 	$scope.serverResponse = '';
@@ -56,8 +56,50 @@ function DashboardCtrl($scope, $rootScope, $http, isAuthenticated, authService) 
 			setResponse(response, false);
 		});
 	}
+	
+	$scope.getInactiveUsers = function() {
+    $http({
+      headers: authService.createAuthorizationTokenHeader(),
+      method: 'GET',
+      url: 'api/getInactive'
+    })
+		.success(function(res) {
+			$scope.inactiveUsers = res;
+		})
+		.catch(function(response) {
+			setResponse(response, false);
+		});
+	}
+	
+	if ($rootScope.authenticated) {
+		$scope.getInactiveUsers();
+	}
+	
+	$scope.activateUser = function(username) {
+    $http({
+      headers: authService.createAuthorizationTokenHeader(),
+      method: 'PUT',
+      url: 'api/activateUser/' + username
+    })
+		.success(function() {
+			 var row = document.getElementById("tr_" + username);
+			 row.parentNode.removeChild(row);
+		})
+		.catch(function(response) {
+			setResponse(response, false);
+		});
+	}
+	
+	$scope.hasRole = function(authorities, role){
+		for (var i in authorities) {
+			if (authorities[i].authority == role)
+		          return true;
+		}
+		return false;
+	}
+	
 }
-DashboardCtrl.resolve = {
+ContentPageCtrl.resolve = {
 	isAuthenticated : function($q, $http, AuthService) {
 		var deferred = $q.defer();
 		var oldToken = AuthService.getJwtToken();
@@ -82,5 +124,5 @@ DashboardCtrl.resolve = {
 	}
 };
 
-DashboardCtrl.$inject = ['$scope', '$rootScope', '$http', 'isAuthenticated', 'AuthService'];
+ContentPageCtrl.$inject = ['$scope', '$rootScope', '$http', 'isAuthenticated', 'AuthService'];
 
