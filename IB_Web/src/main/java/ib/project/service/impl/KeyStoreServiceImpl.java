@@ -46,7 +46,7 @@ public class KeyStoreServiceImpl implements KeyStoreService {
 
 		KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
 		keyStoreWriter.loadKeyStore(null, username.toCharArray());
-		keyStoreWriter.write(username, keyPair.getPrivate(), "test10".toCharArray(), cert);
+		keyStoreWriter.write(username, keyPair.getPrivate(), "pass".toCharArray(), cert);
 		String location = "C:\\Users\\Dragan\\Desktop\\ib_keys\\" + username + ".jks";
 		keyStoreWriter.saveKeyStore(location, "pass".toCharArray());
 

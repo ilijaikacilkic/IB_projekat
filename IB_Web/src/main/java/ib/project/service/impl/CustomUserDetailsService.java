@@ -1,6 +1,9 @@
 package ib.project.service.impl;
 
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,7 +18,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ib.project.model.Authority;
 import ib.project.model.User;
+import ib.project.repository.AuthorityRepository;
 import ib.project.repository.UserRepository;
 import ib.project.service.KeyStoreService;
 
@@ -31,6 +36,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private AuthorityRepository authorityRepository;
 
 	@Autowired
 	private KeyStoreService keyStoreService;
@@ -73,11 +81,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	}
 
-	public void registerNewUser(String username, String password) throws ParseException {
+	public void registerNewUser(String username, String password, String email) throws ParseException {
 		User user = new User();
 		user.setUsername(username);
+		user.setEmail(email);
 		user.setPassword(passwordEncoder.encode(password));
-		user.setEnabled(true);
+
+		List<Authority> allAuthorities = authorityRepository.findAll();
+		Optional<Authority> result = allAuthorities.stream().filter(a -> a.getName().equals("ROLE_USER")).findFirst();
+		user.setAuthorities(Collections.singletonList(result.get()));
 
 		String location = keyStoreService.generateKeyStoreFile(username);
 		user.setCertificate(location);

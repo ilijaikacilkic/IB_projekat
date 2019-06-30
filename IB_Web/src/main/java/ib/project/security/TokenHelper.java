@@ -1,19 +1,16 @@
 package ib.project.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import ib.project.common.TimeProvider;
-import ib.project.model.User;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class TokenHelper {
@@ -26,24 +23,13 @@ public class TokenHelper {
 	@Value("300")
 	private int EXPIRES_IN;
 
-	@Value("600")
-	private int MOBILE_EXPIRES_IN;
-
 	@Value("Authorization")
 	private String AUTH_HEADER;
 
-	static final String AUDIENCE_UNKNOWN = "unknown";
-	static final String AUDIENCE_WEB = "web";
-	static final String AUDIENCE_MOBILE = "mobile";
-	static final String AUDIENCE_TABLET = "tablet";
-
-	@Autowired
-	TimeProvider timeProvider;
-
-	//HMAC sa SHA-512 hash algoritmom
+	// HMAC sa SHA-512 hash algoritmom
 	private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
-	//Metoda koja iz sadrzaja tokena (claims) pronalazi username korisnika
+	// Metoda koja iz sadrzaja tokena (claims) pronalazi username korisnika
 	public String getUsernameFromToken(String token) {
 		String username;
 		try {
@@ -77,13 +63,13 @@ public class TokenHelper {
 		return audience;
 	}
 
-	public String refreshToken(String token, Device device) {
+	public String refreshToken(String token) {
 		String refreshedToken;
-		Date a = timeProvider.now();
+		Date a = new Date();
 		try {
 			final Claims claims = this.getAllClaimsFromToken(token);
 			claims.setIssuedAt(a);
-			refreshedToken = Jwts.builder().setClaims(claims).setExpiration(generateExpirationDate(device))
+			refreshedToken = Jwts.builder().setClaims(claims).setExpiration(generateExpirationDate())
 					.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 		} catch (Exception e) {
 			refreshedToken = null;
@@ -91,24 +77,10 @@ public class TokenHelper {
 		return refreshedToken;
 	}
 
-	//Funkcija koja pri autentifikaciji korisnika kreira novi JWT token
-	public String generateToken(String username, Device device) {
-		String audience = generateAudience(device);
-		return Jwts.builder().setIssuer(APP_NAME).setSubject(username).setAudience(audience)
-				.setIssuedAt(timeProvider.now()).setExpiration(generateExpirationDate(device))
-				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
-	}
-	
-	private String generateAudience(Device device) {
-		String audience = AUDIENCE_UNKNOWN;
-		if (device.isNormal()) {
-			audience = AUDIENCE_WEB;
-		} else if (device.isTablet()) {
-			audience = AUDIENCE_TABLET;
-		} else if (device.isMobile()) {
-			audience = AUDIENCE_MOBILE;
-		}
-		return audience;
+	// Funkcija koja pri autentifikaciji korisnika kreira novi JWT token
+	public String generateToken(String username) {
+		return Jwts.builder().setIssuer(APP_NAME).setSubject(username).setIssuedAt(new Date())
+				.setExpiration(generateExpirationDate()).signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
@@ -121,27 +93,19 @@ public class TokenHelper {
 		return claims;
 	}
 
-	private Date generateExpirationDate(Device device) {
-		long expiresIn = device.isTablet() || device.isMobile() ? MOBILE_EXPIRES_IN : EXPIRES_IN;
-		return new Date(timeProvider.now().getTime() + expiresIn * 1000);
+	private Date generateExpirationDate() {
+		return new Date(new Date().getTime() + EXPIRES_IN * 1000);
 	}
 
-	public int getExpiredIn(Device device) {
-		return device.isMobile() || device.isTablet() ? MOBILE_EXPIRES_IN : EXPIRES_IN;
+	public int getExpiredIn() {
+		return EXPIRES_IN;
 	}
 
-	
-	//FUnkcija koja proverava da li je token validan u odnosu na korisnika koji ga je prosledio serveru
+	// FUnkcija koja proverava da li je token validan u odnosu na korisnika koji ga
+	// je prosledio serveru
 	public Boolean validateToken(String token, UserDetails userDetails) {
-		User user = (User) userDetails;
 		final String username = getUsernameFromToken(token);
-		final Date created = getIssuedAtDateFromToken(token);
-		return (username != null && username.equals(userDetails.getUsername())
-				&& !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate()));
-	}
-
-	private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-		return (lastPasswordReset != null && created.before(lastPasswordReset));
+		return username != null && username.equals(userDetails.getUsername());
 	}
 
 	public String getToken(HttpServletRequest request) {
@@ -161,4 +125,3 @@ public class TokenHelper {
 	}
 
 }
-

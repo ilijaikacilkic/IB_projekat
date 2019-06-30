@@ -41,7 +41,7 @@ public class UserController {
 		return this.userService.findAll();
 	}
 
-	@RequestMapping("/whoami")
+	@RequestMapping("/getLoggedInUser")
 	@PreAuthorize("hasRole('USER')")
 	public User user(Principal user) {
 		return this.userService.findByUsername(user.getName());

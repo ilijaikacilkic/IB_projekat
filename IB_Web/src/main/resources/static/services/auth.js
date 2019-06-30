@@ -33,7 +33,7 @@ angular.module('myApp.services', [])
     return $http({
       headers: createAuthorizationTokenHeader(),
       method: 'GET',
-      url: 'api/whoami'
+      url: 'api/getLoggedInUser'
     });
   };
 

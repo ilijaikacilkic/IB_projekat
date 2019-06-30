@@ -31,4 +31,16 @@ public class UserServiceImpl implements UserService {
 		List<User> result = userRepository.findAll();
 		return result;
 	}
+
+	@Override
+	public List<User> getInactiveUsers() {
+		return userRepository.getInactiveUsers();
+	}
+
+	@Override
+	public void activateUser(String username) {
+		User user = userRepository.findByUsername(username);
+		user.setEnabled(true);
+		userRepository.save(user);
+	}
 }

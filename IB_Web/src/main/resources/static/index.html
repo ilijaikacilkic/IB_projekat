@@ -18,17 +18,25 @@
         <li ng-class="tabClass('/login')" ng-hide="authenticated"><a href="#/login" ng-click="setSelectedTab('/login')">Login</a></li>
         <li ng-class="tabClass('/registration')" ng-hide="authenticated"><a href="#/registration" ng-click="setSelectedTab('/registration')">Create account</a></li>
         <li ng-show="authenticated"><a href="" ng-click="logout()">logout</a></li>
+        <li ng-show="authenticated"><a href="" ng-click="downloadJKS()">Download JKS file</a></li>
     </ul>
+    
     <div ng-view ></div>
+
+<form ng-show="authenticated" method="POST" ng-submit="uploadZip()" enctype="multipart/form-data">
+	<input class="custom-file-input" id="uploadInput" type="file" name="file" /><br />
+	<br /> <input class="btn btn-light" type="submit" value="Submit" />
+</form>
+
   </div>
+  
   <script src="webjars/jquery/2.1.1/jquery.js"></script>
   <script src="webjars/bootstrap/3.3.7/js/bootstrap.js"></script>
   <script src="webjars/angularjs/1.5.8/angular.js"></script>
   <script src="webjars/angular-route/1.5.9/angular-route.js"></script>
 
   <script src="app.js"></script>
-  <script src="dashboard/dashboard.js"></script>
-  <script src="dashboardR/dashboard.js"></script>
+  <script src="content/contentPage.js"></script>
   <script src="login/login.js"></script>
   <script src="services/auth.js"></script>
   <script src="registration/registration.js"></script>
