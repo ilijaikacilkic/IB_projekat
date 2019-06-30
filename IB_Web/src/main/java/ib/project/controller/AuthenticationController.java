@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ib.project.common.DeviceProvider;
 import ib.project.model.User;
 import ib.project.model.UserTokenState;
 import ib.project.security.TokenHelper;
@@ -43,9 +42,6 @@ public class AuthenticationController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private DeviceProvider deviceProvider;
-
 	// Ukoliko je aplikacija podignuta lokalno => localhost:8080/api/login
 	// Metodi se prosledjuje objekat u kom se nalazi username i password korisnika
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -62,8 +58,8 @@ public class AuthenticationController {
 
 		// Kreiraj token
 		User user = (User) authentication.getPrincipal();
-		String jws = tokenHelper.generateToken(user.getUsername(), device);
-		int expiresIn = tokenHelper.getExpiredIn(device);
+		String jws = tokenHelper.generateToken(user.getUsername());
+		int expiresIn = tokenHelper.getExpiredIn();
 
 		// Vrati token kao odgovor na uspesno autentifikaciju
 		return ResponseEntity.ok(new UserTokenState(jws, expiresIn));
@@ -75,13 +71,11 @@ public class AuthenticationController {
 
 		String authToken = tokenHelper.getToken(request);
 
-		Device device = deviceProvider.getCurrentDevice(request);
-
 		if (authToken != null && principal != null) {
 
 			// TODO check user password last update
-			String refreshedToken = tokenHelper.refreshToken(authToken, device);
-			int expiresIn = tokenHelper.getExpiredIn(device);
+			String refreshedToken = tokenHelper.refreshToken(authToken);
+			int expiresIn = tokenHelper.getExpiredIn();
 
 			return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
 		} else {
@@ -109,9 +103,10 @@ public class AuthenticationController {
 			HttpServletResponse response) throws AuthenticationException, IOException, ParseException {
 
 		String username = authenticationRequest.getUsername();
+		String email = authenticationRequest.getEmail();
 		String password = authenticationRequest.getPassword();
 
-		userDetailsService.registerNewUser(username, password);
+		userDetailsService.registerNewUser(username, password, email);
 
 		return ResponseEntity.ok().build();
 	}
