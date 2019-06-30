@@ -3,8 +3,9 @@
 
 <head>
     <base href="/">
-    <title>springboot-jwt-starter</title>
-    <link rel="stylesheet" href="webjars/bootstrap/3.3.7/css/bootstrap.css">
+    <title>Servis</title>
+  <link rel="stylesheet" href="webjars/bootstrap/4.3.1/css/bootstrap.css">
+   
     <style type="text/css">
     [ng\:cloak], [ng-cloak], .ng-cloak {
       display: none !important;
@@ -17,21 +18,21 @@
         <li ng-class="tabClass('/')"><a href="#/" ng-click="setSelectedTab('/')">Home</a></li>
         <li ng-class="tabClass('/login')" ng-hide="authenticated"><a href="#/login" ng-click="setSelectedTab('/login')">Login</a></li>
         <li ng-class="tabClass('/registration')" ng-hide="authenticated"><a href="#/registration" ng-click="setSelectedTab('/registration')">Create account</a></li>
-        <li ng-show="authenticated"><a href="" ng-click="logout()">logout</a></li>
+        <li ng-show="authenticated"><a href="" ng-click="logout()">Logout</a></li>
         <li ng-show="authenticated"><a href="" ng-click="downloadJKS()">Download JKS file</a></li>
     </ul>
     
     <div ng-view ></div>
 
 <form ng-show="authenticated" method="POST" ng-submit="uploadZip()" enctype="multipart/form-data">
-	<input class="custom-file-input" id="uploadInput" type="file" name="file" /><br />
-	<br /> <input class="btn btn-light" type="submit" value="Submit" />
+	<input  class="btn brn-primaty"  id="uploadInput" type="file" name="file" style="background-color: teal;"/><br />
+	<br /> <input class="btn btn-info  btn-lg" type="submit" value="Submit" />
 </form>
 
   </div>
   
   <script src="webjars/jquery/2.1.1/jquery.js"></script>
-  <script src="webjars/bootstrap/3.3.7/js/bootstrap.js"></script>
+  <script src="webjars/bootstrap/4.3.7/js/bootstrap.js"></script>
   <script src="webjars/angularjs/1.5.8/angular.js"></script>
   <script src="webjars/angular-route/1.5.9/angular-route.js"></script>
 
